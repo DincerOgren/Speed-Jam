@@ -9,15 +9,17 @@ public class AttackController : MonoBehaviour
 
 
     LightAttack lightAttack;
+    Transform cam;
     private void Start()
     {
+        cam = Camera.main.transform;
         lightAttack = GetComponent<LightAttack>();
     }
     private void Update()
     {
         if (Input.GetKeyDown(attackKey))
         {
-            lightAttack.PerformLightAttack();
+            lightAttack.PerformLightAttack(cam.forward);
         }
     }
 }

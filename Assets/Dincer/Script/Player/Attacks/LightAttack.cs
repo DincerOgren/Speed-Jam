@@ -26,21 +26,21 @@ public class LightAttack : MonoBehaviour
         attackTimer += Time.deltaTime;
     }
 
-    public void PerformLightAttack()
+    public void PerformLightAttack(Vector3 dir)
     {
         if (attackTimer >= timeBetweenAttacks)
         {
             attackTimer = 0;
-            ShootProjectile();
+            ShootProjectile(dir);
         }
 
     }
 
-    private void ShootProjectile()
+    private void ShootProjectile(Vector3 shootDir)
     {
         var proj = Instantiate(projectilePrefab, projectileExitPoint.position, Quaternion.identity);
 
-        Vector3 dir = transform.forward;
+        Vector3 dir = shootDir;
 
         proj.GetComponent<Rigidbody>().velocity = projectileSpeed * dir;
         

@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class ChargeAttack : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public GameObject blastPrefab;
+
+    public float reverseForce;
+
+    public GameObject chargeParticle;
+    
+    Vector3 reverseDir;
+
+    bool isChargeAttacking;
+
+    public float chargeDuration;
+    // perfect Charge Duratijn?
+    // DMG layer etc.
+    float chargeTimer = 0;
+
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            print(true);
+        }
+    }
+    void ChargeBlast()
+    {
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+
+
 }
