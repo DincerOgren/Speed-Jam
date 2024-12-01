@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class FireSpirit : MonoBehaviour
 {
+    public GameObject explodeParticle;
     public float hoverForce = 5f; // Constant upward force
     public float moveSpeed = 5f;  // Movement speed
     public float attackSpeed = 10f;
+    public float explodeRange = 5f;
     public float oscillationAmplitude = 0.5f; // How much it moves up and down
     public float oscillationFrequency = 2f;   // Speed of the oscillation
     public Transform target;
@@ -15,6 +17,8 @@ public class FireSpirit : MonoBehaviour
     [Header("AttackSettings")]
     public float chaseRange;
     public float attackRange;
+
+    private bool isExploding = false;
 
     public GameObject player;
 
@@ -47,34 +51,62 @@ public class FireSpirit : MonoBehaviour
         //FollowTarget();
         distance = ((player.transform.position - transform.position).magnitude);
         
-        if(distance > chaseRange && distance > attackRange)
+        if (distance <= explodeRange)
         {
-            chaseIt = false;
-            attackIt = false;
+            ExplodeIt();
         }
-        if(distance < chaseRange && distance > attackRange)
+        else
         {
-            chaseIt = true;
-            attackIt = false;
-        }
-        
-        if(distance < chaseRange && distance < attackRange)
-        {
-            attackIt = true;
-            chaseIt = false;
-        }
+            if (distance > chaseRange && distance > attackRange)
+            {
+                chaseIt = false;
+                attackIt = false;
+            }
+            if (distance < chaseRange && distance > attackRange)
+            {
+                chaseIt = true;
+                attackIt = false;
+            }
 
-        if (chaseIt) Chase();
-        if (attackIt) Attack();
+            if (distance < chaseRange && distance < attackRange)
+            {
+                attackIt = true;
+                chaseIt = false;
+            }
+
+            if (chaseIt) Chase();
+            if (attackIt) Attack();
+        }
     }
 
+    private void ExplodeIt()
+    {
+        transform.position = transform.position;
+        rb.velocity = Vector3.zero;
+
+        if (!isExploding)
+        {
+            isExploding = true;
+            print(rb.velocity);
+
+            foreach (Transform trans in transform)
+            {
+                trans.gameObject.SetActive(false);
+            }
+
+            GameObject expld = (GameObject)Instantiate(explodeParticle);
+            expld.transform.position = transform.position;
+            
+            Destroy(gameObject, 0.5f);
+        }
+    }
     void SimulateGravity()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, 1000, LayerMask.GetMask("Ground")))
         {
             float height = hitInfo.point.y + maxHeight;
             float dist = (height - transform.position.y);
-            print("Distance = " + dist);
+            
             //if (dist < maxHeight)
             //{
             //    rb.AddForce(Vector3.up * hoverForce, ForceMode.VelocityChange);
@@ -87,7 +119,7 @@ public class FireSpirit : MonoBehaviour
             //}
             float amountToLift;
             amountToLift = dist * hoverForce - GetPlayerVerticalVelocity().y;
-            print("AmountotLift = " + amountToLift);
+            
             Vector3 liftForce = new(0, amountToLift, 0);
             rb.AddForce(liftForce, ForceMode.VelocityChange);
         }
