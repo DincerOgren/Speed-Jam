@@ -11,6 +11,7 @@ public class InteractWithObject : MonoBehaviour
     public int currentValue = 0;
     private GameObject interactingObject;
 
+    public bool isPressing;
     
 
     public bool done;
@@ -55,10 +56,18 @@ public class InteractWithObject : MonoBehaviour
         }
 
 
-        if(Input.GetKeyDown(KeyCode.F) && interactable && !interacting)
+        if(Input.GetKey(KeyCode.F))
         {
-            interacting = true;
-            Interact();
+            if(interactable && !interacting)
+            {
+                isPressing = true;
+                interacting = true;
+                Interact();
+            }
+        }
+        else
+        {
+            isPressing = false;
         }
     }
 
@@ -69,7 +78,7 @@ public class InteractWithObject : MonoBehaviour
 
     IEnumerator Focus()
     {
-        while(interactable)
+        while(interactable && isPressing)
         {
             currentValue += 20;
 
@@ -87,7 +96,7 @@ public class InteractWithObject : MonoBehaviour
                 
             }
 
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
 
         currentValue = 0;
