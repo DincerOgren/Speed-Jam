@@ -3198,11 +3198,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1253064742, guid: 5c99f402f0ea4064f8c7d321d1875599, type: 3}
       propertyPath: chaseRange
-      value: 20
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1253064742, guid: 5c99f402f0ea4064f8c7d321d1875599, type: 3}
       propertyPath: attackRange
-      value: 12
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2203978875860145436, guid: 5c99f402f0ea4064f8c7d321d1875599, type: 3}
       propertyPath: m_Name
@@ -3609,6 +3609,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1253064742, guid: 5c99f402f0ea4064f8c7d321d1875599, type: 3}
+      propertyPath: chaseRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1253064742, guid: 5c99f402f0ea4064f8c7d321d1875599, type: 3}
+      propertyPath: attackRange
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2203978875860145436, guid: 5c99f402f0ea4064f8c7d321d1875599, type: 3}
       propertyPath: m_Name
       value: Fire Spirit (1)
@@ -5489,6 +5497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   increaseAmount: 15
   currentValue: 0
+  isPressing: 0
   done: 0
   interactable: 0
 --- !u!4 &3670329860769971707
