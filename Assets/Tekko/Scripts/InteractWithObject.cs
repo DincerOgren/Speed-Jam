@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class InteractWithObject : MonoBehaviour
 {
-    public Slider slider;
+    private Slider slider;
+    private GameObject sliderObject;
     public int increaseAmount = 15;
     public int currentValue = 0;
     private GameObject interactingObject;
+
+    
 
     public bool done;
 
@@ -18,10 +21,18 @@ public class InteractWithObject : MonoBehaviour
 
     public bool interactable;
 
+    private void Awake()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+        slider = GameObject.FindGameObjectWithTag("PressEUi").GetComponent<Slider>();
+        sliderObject = GameObject.FindGameObjectWithTag("PressEUi");
+    }
+
     private void Start()
     {
         interactingObject = gameObject;
-        player = GameObject.FindGameObjectWithTag("Player");
+        
+        sliderObject.SetActive(false);
     }
     private void Update()
     {
@@ -30,10 +41,12 @@ public class InteractWithObject : MonoBehaviour
         if(diff.magnitude < 10)
         {
             interactable = true;
+            sliderObject.SetActive(true);
         }
         else
         {
             interactable = false;
+            sliderObject.SetActive(false);
         }
 
         if (slider.value <= currentValue)
@@ -65,8 +78,13 @@ public class InteractWithObject : MonoBehaviour
                 print(currentValue);
                 done = true;
                 yield return new WaitForSecondsRealtime(0.5f);
-                StopAllCoroutines();
+                sliderObject.SetActive(false);
+                slider.value = 0;
                 Destroy(gameObject);
+                
+                StopAllCoroutines();
+                
+                
             }
 
             yield return new WaitForSecondsRealtime(1);
@@ -74,6 +92,7 @@ public class InteractWithObject : MonoBehaviour
 
         currentValue = 0;
         slider.value = 0;
+        sliderObject.SetActive(false);
         print(currentValue);
         interacting = false;
         StopAllCoroutines();

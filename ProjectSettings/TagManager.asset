@@ -6,6 +6,8 @@ TagManager:
   tags:
   - name
   - score
+  - Missile
+  - PressEUi
   layers:
   - Default
   - TransparentFX
