@@ -3265,13 +3265,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverForce: 5
   moveSpeed: 3
+  attackSpeed: 7
   oscillationAmplitude: 0.5
   oscillationFrequency: 2
   target: {fileID: 0}
-  chaseRange: 5.72
-  attackRange: 0
-  maxHeight: 50
+  chaseRange: 15
+  attackRange: 6
+  player: {fileID: 0}
+  maxHeight: 1.5
   graivtyForce: 10
+  distance: 0
 --- !u!54 &1253064745
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3288,6 +3291,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &1253064748
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253064741}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.33, z: 0}
 --- !u!1 &1253343293
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class FireSpirit : MonoBehaviour
 {
     public float hoverForce = 5f; // Constant upward force
-    public float moveSpeed = 3f;  // Movement speed
+    public float moveSpeed = 5f;  // Movement speed
+    public float attackSpeed = 10f;
     public float oscillationAmplitude = 0.5f; // How much it moves up and down
     public float oscillationFrequency = 2f;   // Speed of the oscillation
     public Transform target;
@@ -14,17 +16,23 @@ public class FireSpirit : MonoBehaviour
     public float chaseRange;
     public float attackRange;
 
+    public GameObject player;
+
     private Rigidbody rb;
     private Vector3 hoverDirection;
 
+    private bool chaseIt, attackIt;
 
+    private float journeyLength;
 
     [Header("Gravity")]
     public float maxHeight = 50f;
     public float graivtyForce = 10f;
 
+    public float distance;
     private void Awake()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         target = GameObject.FindWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
     }
@@ -37,6 +45,27 @@ public class FireSpirit : MonoBehaviour
         SimulateGravity();
         //SimulateFlight();
         //FollowTarget();
+        distance = ((player.transform.position - transform.position).magnitude);
+        
+        if(distance > chaseRange && distance > attackRange)
+        {
+            chaseIt = false;
+            attackIt = false;
+        }
+        if(distance < chaseRange && distance > attackRange)
+        {
+            chaseIt = true;
+            attackIt = false;
+        }
+        
+        if(distance < chaseRange && distance < attackRange)
+        {
+            attackIt = true;
+            chaseIt = false;
+        }
+
+        if (chaseIt) Chase();
+        if (attackIt) Attack();
     }
 
     void SimulateGravity()
@@ -61,15 +90,29 @@ public class FireSpirit : MonoBehaviour
             print("AmountotLift = " + amountToLift);
             Vector3 liftForce = new(0, amountToLift, 0);
             rb.AddForce(liftForce, ForceMode.VelocityChange);
-
-
-
         }
-
-
-
-
     }
+
+    private void Chase()
+    {
+        transform.LookAt(player.transform.position);
+
+        Vector3 velocity = transform.forward * moveSpeed;
+
+        // Rigidbody'ye doðru bir hýz uygula
+        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+    }
+
+    private void Attack()
+    {
+        transform.LookAt(player.transform.position);
+
+        Vector3 velocity = transform.forward * attackSpeed;
+
+        // Rigidbody'ye doðru bir hýz uygula
+        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+    }
+
 
     private Vector3 GetPlayerVerticalVelocity()
     {
