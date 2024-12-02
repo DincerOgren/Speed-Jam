@@ -1485,13 +1485,14 @@ MonoBehaviour:
   projectileExitPoint: {fileID: 1158848596}
   playerHeightCorrection: 1.25
   useMeteor: 0
-  meteorPrefab: {fileID: 0}
-  meteorFallSpeed: 0
+  meteorPrefab: {fileID: 221468908, guid: ad9b8a54bfa89694b9dfe55576130154, type: 3}
+  meteorFallSpeed: 20
   maxMeteorHeight: 15
   meteorAmount: 3
   meteorDamage: 0
-  randomOffsetMultiplier: 0
-  meteorAirWaitTime: 1
+  randomOffsetMultiplier: 4
+  meteorAirWaitTime: 2
+  timeBetweenMeteors: 1
   ascendHeight: 3
   ascendForce: 0.4
   ascendDuration: 10

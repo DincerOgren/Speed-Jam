@@ -42,6 +42,10 @@ public class WraithController : MonoBehaviour
     public float meteorDamage;
     public float randomOffsetMultiplier;
     public float meteorAirWaitTime = 1f;
+    public float timeBetweenMeteors = 1f;
+    float meteorTimer=Mathf.Infinity;
+    bool meteorStarted;
+    bool meteorEnded;
 
     [Header("Meteor Ascend Settings")]
     public float ascendHeight;
@@ -208,7 +212,9 @@ public class WraithController : MonoBehaviour
     {
         if (IsPlayerInRange(projectileSkillRange))
         {
+            meteorEnded = false;
             //anim.SetTrigger("Meteor");
+            
             StartCoroutine(AscendPlayer());
         }
         else
@@ -221,7 +227,7 @@ public class WraithController : MonoBehaviour
     {
         rb.velocity = Vector3.zero;
         ascendTimer = 0;
-        while (ascendTimer<ascendDuration)
+        while (!meteorEnded)
         {
 
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, 100, LayerMask.GetMask("Ground")))
@@ -234,6 +240,11 @@ public class WraithController : MonoBehaviour
                 amountToLift = dist * ascendForce - GetPlayerVerticalVelocity().y;
                 Vector3 liftForce = new(0, amountToLift, 0);
                 rb.AddForce(liftForce, ForceMode.VelocityChange);
+                if (Mathf.Abs(transform.position.y - ascendHeight) <=1.5f && !meteorStarted)
+                {
+                    meteorStarted = true;
+                    anim.SetTrigger("MeteorStart");
+                }
                 ascendTimer += Time.deltaTime;
 
             }
@@ -249,21 +260,31 @@ public class WraithController : MonoBehaviour
     {
         Debug.Log("Meteor Shower Activated!");
 
-        for (int i = 0; i < meteorAmount; i++)
+        for (int i = 0; i < meteorAmount; )
         {
-            
-
+            if (meteorTimer>timeBetweenMeteors)
+            {
+                meteorTimer = 0;
+                SpawnMeteor();
+                i++;
+            }
             // Spawn meteor
-            SpawnMeteor();
+
+            meteorTimer += Time.deltaTime;
             yield return null;
         
         }
+        meteorEnded = true;
+        meteorStarted = false;
+        anim.SetTrigger("MeteorEnd");
     }
 
     private void SpawnMeteor()
     {
         Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * randomOffsetMultiplier;
+        print("Random offset " + randomOffset);
         randomOffset.y = maxMeteorHeight;
+        print("Random offset y" + randomOffset);
         Vector3 spawnPosition = player.position + randomOffset;
 
 
