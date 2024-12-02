@@ -32,6 +32,7 @@ public class LightAttack : MonoBehaviour
         {
             attackTimer = 0;
             ShootProjectile(dir);
+            PlayerSFXManager.instance.PlayLightAttack();
         }
 
     }

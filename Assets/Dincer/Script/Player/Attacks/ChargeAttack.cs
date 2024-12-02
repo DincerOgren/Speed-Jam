@@ -195,6 +195,7 @@ public class ChargeAttack : MonoBehaviour
         isStartedChargingAttack = false;
         chargeParticle.SetActive(false);
         blastPrefab.Play();
+        PlayerSFXManager.instance.PlayChargeAttack();
 
         //Damage with chargetime*dmg
         AddReverseForce();

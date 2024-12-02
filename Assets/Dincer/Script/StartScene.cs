@@ -26,4 +26,9 @@ public class StartScene : MonoBehaviour
         yield return null;
         loading.gameObject.SetActive(false);
     }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }

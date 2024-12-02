@@ -431,30 +431,64 @@ public class PlayerMovement : MonoBehaviour
     //    rb.isKinematic = false;
     //}
 
+    //private void ApplyPushbackForces()
+    //{
+
+
+    //    if (pushVelocity.magnitude < minVelocityThreshold)
+    //    {
+    //        pushVelocity = Vector3.zero;
+    //        ResetPushback();
+    //        return;
+    //    }
+
+
+
+    //    pushVelocity.x = Mathf.Lerp(pushVelocity.x, 0, horizontalDecay * Time.deltaTime);
+    //    pushVelocity.z = Mathf.Lerp(pushVelocity.z, 0, horizontalDecay * Time.deltaTime);
+
+    //    if (!isGrounded)
+    //    {
+    //        pushVelocity.y -= gravity * Time.deltaTime; // Apply gravity
+    //    }
+    //    else
+    //    {
+    //        pushVelocity.y = 0; // Prevent downward motion while grounded
+    //    }
+
+    //    controller.Move(pushVelocity * Time.deltaTime);
+    //}
+
     private void ApplyPushbackForces()
     {
+        // Separate horizontal and vertical velocity components
+        Vector3 horizontalVelocity = new Vector3(pushVelocity.x, 0, pushVelocity.z); // Only x and z
+        float verticalVelocity = pushVelocity.y; // Only y
 
-        if (pushVelocity.magnitude < minVelocityThreshold)
+        print("HORIZONTAL MAG " + horizontalVelocity.magnitude);
+        // Check if horizontal velocity is negligible and reset if true
+        if (horizontalVelocity.magnitude < minVelocityThreshold && verticalVelocity <.5f && (isGrounded || verticalVelocity <= 0))
         {
             pushVelocity = Vector3.zero;
             ResetPushback();
             return;
         }
 
-
-
+        // Apply horizontal decay (reduce x and z velocity gradually)
         pushVelocity.x = Mathf.Lerp(pushVelocity.x, 0, horizontalDecay * Time.deltaTime);
         pushVelocity.z = Mathf.Lerp(pushVelocity.z, 0, horizontalDecay * Time.deltaTime);
 
+        // Apply gravity to vertical velocity if not grounded
         if (!isGrounded)
         {
             pushVelocity.y -= gravity * Time.deltaTime; // Apply gravity
         }
         else
         {
-            pushVelocity.y = 0; // Prevent downward motion while grounded
+            pushVelocity.y = Mathf.Max(0, pushVelocity.y); // Prevent downward motion when grounded
         }
 
+        // Move the character using the calculated velocity
         controller.Move(pushVelocity * Time.deltaTime);
     }
 

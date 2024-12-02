@@ -13,6 +13,7 @@ public class Health : MonoBehaviour
     [SerializeField] float maxHealth;
     float currentHealth;
 
+    [SerializeField] GameObject deadCanvas;
 
     bool isDead;
     private void Awake()
@@ -28,7 +29,7 @@ public class Health : MonoBehaviour
 
     private void Update()
     {
-        
+
     }
 
     public void TakeDamage(float amount)
@@ -56,6 +57,11 @@ public class Health : MonoBehaviour
     void Die()
     {
         //Dead anim
+        if (isPlayer)
+        {
+            deadCanvas.SetActive(true);
+
+        }
         gameObject.SetActive(false);
     }
 
