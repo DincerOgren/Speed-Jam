@@ -43,7 +43,7 @@ public class WraithController : MonoBehaviour
     public float randomOffsetMultiplier;
     public float meteorAirWaitTime = 1f;
     public float timeBetweenMeteors = 1f;
-    float meteorTimer=Mathf.Infinity;
+    float meteorTimer = Mathf.Infinity;
     bool meteorStarted;
     bool meteorEnded;
 
@@ -65,8 +65,30 @@ public class WraithController : MonoBehaviour
     //bool isEveryEnemyDead; ??
 
 
+    [Header("Laser Beam")]
+    public bool useLaser;
+    public GameObject drawParticle;
+    public ParticleSystem laserParticle;
 
+    public float energyDrawDuratiion;
+    float drawTimer;
 
+    public float laserDuration;
+    float laserTimer;
+
+    public float laserWarningDuration;
+    float laserWarningTimer;
+    public float laserDamage;
+    public float laserCollider;
+    public float laserRange;
+
+    public float laserTurnSpeed;
+
+    public LineRenderer laserBeam; //    public float warningDuration = 1f; // Time to telegraph the laser
+                                   // Maximum distance of the laser
+    public LayerMask hitLayers; // Layers the laser can hit
+
+    private bool isFiring = false;
 
 
 
@@ -75,13 +97,13 @@ public class WraithController : MonoBehaviour
 
     Rigidbody rb;
     Animator anim;
-    Transform player;
+    public Transform player;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        player = GameObject.FindWithTag("Player").transform;
+       // player = GameObject.FindWithTag("Player").transform;
     }
 
     private void Start()
@@ -95,9 +117,11 @@ public class WraithController : MonoBehaviour
 
         UpdateAnimator();
         CheckGrounded();
-        if (startedWalking)
+        if (startedWalking )
         {
             transform.LookAt(player);
+
+            print("eftyyuu");
 
         }
         if (IsInActivateRange() && !startedWalking)
@@ -120,9 +144,177 @@ public class WraithController : MonoBehaviour
                 useMeteor = false;
                 StartMeteorSkill();
             }
+            if (useLaser)
+            {
+                useLaser = false;
+                StartLaserSkill();
+            }
+
+            if (isFiring)
+            {
+                RotateTowardsPlayer(laserTurnSpeed);
+                UpdateLaserBeam();
+            }
+
         }
 
     }
+
+
+    #region Laser Section
+
+    private void StartLaserSkill()
+    {
+
+        if (IsPlayerInRange(laserRange))
+        {
+            anim.SetTrigger("StartLaser");
+            StartLaserBeam();
+        }
+        else
+            MoveTowardsPlayer();
+
+        
+    }
+
+    IEnumerator EnergyyDraw()
+    {
+        drawTimer = 0;
+        while (drawTimer < energyDrawDuratiion)
+        {
+            transform.LookAt(player);
+
+            drawTimer+= Time.deltaTime;
+            yield return null;
+        }
+
+        FireLaser();
+
+    }
+
+    private void FireLaser()
+    {
+        throw new NotImplementedException();
+    }
+
+
+    void RotateTowardsPlayer(float speed)
+    {
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+
+        // Smoothly rotate towards the player
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * speed);
+
+        //Vector3 directionToPlayer = (player.position - transform.position).normalized;
+
+        //// Calculate target rotation
+        //Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+
+        //// Smoothly rotate toward the target rotation using RotateTowards
+        //transform.rotation = Quaternion.RotateTowards(
+        //    transform.rotation,
+        //    targetRotation,
+        //    laserTurnSpeed  // Control rotation speed
+        //);
+    }
+
+
+
+
+    
+
+    
+        
+    
+
+    void StartLaserBeam()
+    {
+        StartCoroutine(LaserBeamSequence());
+    }
+
+    IEnumerator LaserBeamSequence()
+    {
+        // Telegraph the laser with a warning beam
+        EnableLaserBeam(Color.red, 0.01f); // Thin red line as a warning
+        laserWarningTimer = 0;
+        transform.LookAt(player);
+        while (laserWarningTimer<laserWarningDuration)
+        {
+            RotateTowardsPlayer(laserTurnSpeed * 2);
+            UpdateLaserPos();
+            print("LookAt");
+            laserWarningTimer += Time.deltaTime;
+            yield return null;
+        }
+        DisableLaserBeam();
+
+        // Fire the actual laser
+        //EnableLaserBeam(Color.yellow, 2f); // Thick yellow line for the main laser
+
+
+        laserParticle.Play();
+        isFiring = true;
+        yield return new WaitForSeconds(laserDuration);
+
+        // Disable the laser
+        isFiring = false;
+        laserParticle.Stop();
+        anim.SetTrigger("LaserEnd");
+    }
+
+    void EnableLaserBeam(Color color, float width)
+    {
+        laserBeam.enabled = true;
+        laserBeam.startColor = color;
+        laserBeam.endColor = color;
+        laserBeam.startWidth = width;
+        laserBeam.endWidth = width;
+    }
+
+    void DisableLaserBeam()
+    {
+        laserBeam.enabled = false;
+        //anim.SetTrigger("LaserEnd");
+    }
+
+    void UpdateLaserBeam()
+    {
+        // Update the laser beam's direction
+        //UpdateLaserPos();
+
+        // Detect collisions
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, laserRange, hitLayers))
+        {
+            // Adjust the laser's endpoint to the collision point
+           // laserBeam.SetPosition(1, hit.point);
+
+            // Handle collision (e.g., damage player)
+            if (hit.collider.CompareTag("Player"))
+            {
+                Debug.Log("Player hit by laser!");
+                // Apply damage or effects here
+            }
+        }
+    }
+
+    private void UpdateLaserPos()
+    {
+        laserBeam.SetPosition(0, transform.position+Vector3.up*playerHeightCorrection); // Start at the boss's position
+        Vector3 targetDirection = transform.forward * laserRange;
+        laserBeam.SetPosition(1, transform.position+playerHeightCorrection*Vector3.up + targetDirection);
+    }
+
+
+
+
+
+
+
+
+
+    #endregion
 
 
 
@@ -188,12 +380,9 @@ public class WraithController : MonoBehaviour
     void SpawnProjectile()
     {
         var a = Instantiate(projPrefab, projectileExitPoint.position, Quaternion.identity);
-        Vector3 playerPos = player.position;
-        playerPos.y -= playerHeightCorrection;
-        Vector3 dir = (playerPos - transform.position).normalized;
-        print("Dir = " + dir);
-        //dir.y -= playerHeightCorrection;
-        print("Dir after correction = " + dir);
+        
+        Vector3 dir = (player.position - transform.position).normalized;
+        
 
         a.GetComponent<Rigidbody>().velocity = dir * projSpeed;
         //a.lifetime = lifetime;
@@ -214,7 +403,7 @@ public class WraithController : MonoBehaviour
         {
             meteorEnded = false;
             //anim.SetTrigger("Meteor");
-            
+
             StartCoroutine(AscendPlayer());
         }
         else
@@ -230,6 +419,10 @@ public class WraithController : MonoBehaviour
         while (!meteorEnded)
         {
 
+
+
+
+
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, 100, LayerMask.GetMask("Ground")))
             {
                 float height = hitInfo.point.y + ascendHeight;
@@ -240,7 +433,7 @@ public class WraithController : MonoBehaviour
                 amountToLift = dist * ascendForce - GetPlayerVerticalVelocity().y;
                 Vector3 liftForce = new(0, amountToLift, 0);
                 rb.AddForce(liftForce, ForceMode.VelocityChange);
-                if (Mathf.Abs(transform.position.y - ascendHeight) <=1.5f && !meteorStarted)
+                if (Mathf.Abs(transform.position.y - ascendHeight) <= .5f && !meteorStarted)
                 {
                     meteorStarted = true;
                     anim.SetTrigger("MeteorStart");
@@ -260,9 +453,9 @@ public class WraithController : MonoBehaviour
     {
         Debug.Log("Meteor Shower Activated!");
 
-        for (int i = 0; i < meteorAmount; )
+        for (int i = 0; i < meteorAmount;)
         {
-            if (meteorTimer>timeBetweenMeteors)
+            if (meteorTimer > timeBetweenMeteors)
             {
                 meteorTimer = 0;
                 SpawnMeteor();
@@ -272,7 +465,7 @@ public class WraithController : MonoBehaviour
 
             meteorTimer += Time.deltaTime;
             yield return null;
-        
+
         }
         meteorEnded = true;
         meteorStarted = false;
@@ -321,7 +514,7 @@ public class WraithController : MonoBehaviour
 
     void CheckGrounded()
     {
-        isAscending = !(Physics.Raycast(groundCheckPos.position, Vector3.down,groundCheckDist, LayerMask.GetMask("Ground")));
+        isAscending = !(Physics.Raycast(groundCheckPos.position, Vector3.down, groundCheckDist, LayerMask.GetMask("Ground")));
     }
     void UpdateAnimator()
     {
@@ -339,5 +532,11 @@ public class WraithController : MonoBehaviour
         Gizmos.color = Color.red;
 
         Gizmos.DrawRay(groundCheckPos.position, Vector3.down * groundCheckDist);
+
+        Gizmos.color = Color.blue;
+        Vector3 directionToTarget = (player.position - transform.position).normalized;
+
+
+        Gizmos.DrawRay(transform.position, directionToTarget * laserRange);
     }
 }
