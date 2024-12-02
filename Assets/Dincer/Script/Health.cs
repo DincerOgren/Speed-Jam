@@ -28,7 +28,7 @@ public class Health : MonoBehaviour
 
     private void Update()
     {
-
+        
     }
 
     public void TakeDamage(float amount)
@@ -51,6 +51,7 @@ public class Health : MonoBehaviour
     }
 
 
+    public float GetHealthPercentage => currentHealth * 100 / maxHealth;
 
     void Die()
     {

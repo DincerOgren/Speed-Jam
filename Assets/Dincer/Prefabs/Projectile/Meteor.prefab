@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 205544377}
   - component: {fileID: 205544379}
   - component: {fileID: 205544378}
+  - component: {fileID: 5218687091433725785}
   m_Layer: 0
   m_Name: Ground Indicator
   m_TagString: Untagged
@@ -61,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f111fba3f7bef604bb47f83cc10ac2f8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,6 +84,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!111 &5218687091433725785
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205544376}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 2efcf90c627db5d45bb737be825f1374, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 2efcf90c627db5d45bb737be825f1374, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &4157546210602922321
 GameObject:
   m_ObjectHideFlags: 0

@@ -740,7 +740,8 @@ MonoBehaviour:
   sprintSpeed: 15
   acceleration: 15
   deceleration: 20
-  gravity: 250
+  gravity: 20
+  maxGravity: 50
   jumpHeight: 2
   rb: {fileID: 0}
   isPushbackActive: 0
@@ -825,7 +826,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arms: {fileID: 6669451855473626075}
   blastPrefab: {fileID: 6787282725348561622}
-  reverseForce: 10
+  reverseForce: 5
   chargeParticle: {fileID: 6668694886226473562}
   chargeDuration: 0
   minHoldTime: 0.3

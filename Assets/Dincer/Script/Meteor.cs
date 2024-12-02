@@ -23,13 +23,15 @@ public class Meteor : MonoBehaviour
 
     private void Update()
     {
-        if (fallTimer<meteorFallWait)
+        if (fallTimer < meteorFallWait)
         {
+            CreateIndicator();
             fallTimer += Time.deltaTime;
             return;
         }
+        else
+            indicator.gameObject.SetActive(false);
         Descend();
-        CreateIndicator();
     }
 
     private void CreateIndicator()

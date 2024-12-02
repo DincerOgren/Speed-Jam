@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 public class WraithController : MonoBehaviour
@@ -25,7 +26,7 @@ public class WraithController : MonoBehaviour
     public float projectileSkillRange;
     public float projLifetime;
     public float projDamage;
-    public bool shouldStartProjectileThrow;
+    public bool useProjectileSkill;
     public Transform projectileExitPoint;
     public float playerHeightCorrection = 1f;
     //add projectiles script for impact effects;
@@ -44,8 +45,19 @@ public class WraithController : MonoBehaviour
     public float meteorAirWaitTime = 1f;
     public float timeBetweenMeteors = 1f;
     float meteorTimer = Mathf.Infinity;
+    public float firstMeteorPercentage;
+    public float firstMeteorAmount;
+    public float secondMeteorPercentage;
+    public float secondMeteorAmount;
+    public float lastMeteorPercentage;
+    public float lastTimeBetweenMeteors;
+    public float lastMeteorAmount;
     bool meteorStarted;
     bool meteorEnded;
+    bool firstMeteor;
+    bool secondMeteor;
+    bool thirdMeteor;
+
 
     [Header("Meteor Ascend Settings")]
     public float ascendHeight;
@@ -55,6 +67,7 @@ public class WraithController : MonoBehaviour
     bool isAscending;
     public Transform groundCheckPos;
     public float groundCheckDist;
+    
 
     [Header("Shield and Spawn")]
     public float shieldDuration;
@@ -90,15 +103,20 @@ public class WraithController : MonoBehaviour
 
 
 
-
-
-
+    public float waitTimeBetweenSkills = 1.5f;
+    float waitTimer = 0;
+    bool isPerformingAction;
     Rigidbody rb;
     Animator anim;
     public Transform player;
+    Health health;
+
+    public bool useBrain;
+    bool queeMeteor;
 
     private void Awake()
     {
+        health=GetComponent<Health>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         // player = GameObject.FindWithTag("Player").transform;
@@ -115,11 +133,10 @@ public class WraithController : MonoBehaviour
 
         UpdateAnimator();
         CheckGrounded();
-        if (startedWalking)
+        if (startedWalking && !walkDone)
         {
             transform.LookAt(player);
 
-            print("eftyyuu");
 
         }
         if (IsInActivateRange() && !startedWalking)
@@ -132,9 +149,9 @@ public class WraithController : MonoBehaviour
 
         if (walkDone)
         {
-            if (shouldStartProjectileThrow)
+            if (useProjectileSkill)
             {
-                shouldStartProjectileThrow = false;
+                useProjectileSkill = false;
                 StartProjectileThrow();
             }
             if (useMeteor)
@@ -156,6 +173,67 @@ public class WraithController : MonoBehaviour
 
         }
 
+        
+        CheckHealth();
+
+
+        if (!useBrain)
+        {
+            return;
+        }
+
+        QueeMeteorSkill();
+
+        if (IsInActivateRange() && !isAscending)
+        {
+            if (waitTimer > waitTimeBetweenSkills)
+            {
+
+                ControlBoss();
+            }
+
+
+
+            waitTimer += Time.deltaTime;
+        }
+
+
+    }
+
+    void QueeMeteorSkill()
+    {
+        if (!isPerformingAction && queeMeteor)
+        {
+            queeMeteor = false;
+            useMeteor = true;
+            
+        }
+    }
+
+    void CheckHealth()
+    {
+        if (health.GetHealthPercentage<=firstMeteorPercentage && !firstMeteor)
+        {
+            firstMeteor = true;
+            queeMeteor = true;
+        }
+    }
+    void ControlBoss()
+    {
+        if (isPerformingAction) return;
+
+        
+            float skill = UnityEngine.Random.Range(1, 3);
+
+            if (skill == 1)
+            {
+                useLaser = true;
+            }
+            else if (skill == 2)
+            {
+                useProjectileSkill = true;
+            }
+        
     }
 
 
@@ -167,18 +245,17 @@ public class WraithController : MonoBehaviour
         if (IsPlayerInRange(laserRange))
         {
             anim.SetTrigger("StartLaser");
+            isPerformingAction = true;
+
             StartLaserBeam();
         }
         else
-            MoveTowardsPlayer();
+            MoveTowardsPlayer(laserRange);
 
 
     }
 
-    private void FireLaser()
-    {
-        throw new NotImplementedException();
-    }
+
 
 
     void RotateTowardsPlayer(float speed)
@@ -243,6 +320,8 @@ public class WraithController : MonoBehaviour
         // Disable the laser
         isFiring = false;
         laserParticle.Stop();
+        isPerformingAction = false;
+        waitTimer = 0;
         anim.SetTrigger("LaserEnd");
     }
 
@@ -302,20 +381,37 @@ public class WraithController : MonoBehaviour
 
 
     #region WalkSection
-    private IEnumerator WalkTowardsPlayer()
+    private IEnumerator WalkTowardsPlayer(float actiRange = 0)
     {
         float movTime = 0;
 
-        while (moveTime > movTime)
+        if (actiRange == 0)
         {
-            print("In while " + movTime);
-            Vector3 dir = (player.position - transform.position).normalized;
-            rb.velocity = dir * moveSpeed;
-            movTime += Time.deltaTime;
-            yield return null;
+
+            while (moveTime > movTime)
+            {
+                print("In while " + movTime);
+                Vector3 dir = (player.position - transform.position).normalized;
+                rb.velocity = dir * moveSpeed;
+                movTime += Time.deltaTime;
+                yield return null;
+            }
+            walkDone = true;
+            print("Move Ended");
         }
-        walkDone = true;
-        print("Move Ended");
+        else
+        {
+
+            while (Vector3.Distance(player.position, transform.position) > actiRange - 10f)
+            {
+                print("In while " + movTime);
+                Vector3 dir = (player.position - transform.position).normalized;
+                rb.velocity = dir * moveSpeed;
+                movTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+
     }
 
     bool IsInActivateRange() => Physics.CheckSphere(transform.position, activateRange, playerLayer);
@@ -328,10 +424,12 @@ public class WraithController : MonoBehaviour
     {
         if (IsPlayerInRange(projectileSkillRange))
         {
+            isPerformingAction = true;
+
             anim.SetTrigger("Throw");
         }
         else
-            MoveTowardsPlayer();
+            MoveTowardsPlayer(projectileSkillRange);
     }
 
     public void Throw()
@@ -356,7 +454,9 @@ public class WraithController : MonoBehaviour
             yield return null;
         }
 
-        shouldStartProjectileThrow = false;
+        useProjectileSkill = false;
+        isPerformingAction = false;
+        waitTimer = 0;
         anim.ResetTrigger("Throw");
     }
 
@@ -384,13 +484,15 @@ public class WraithController : MonoBehaviour
     {
         if (IsPlayerInRange(projectileSkillRange))
         {
+            isPerformingAction = true;
+
             meteorEnded = false;
             //anim.SetTrigger("Meteor");
 
             StartCoroutine(AscendPlayer());
         }
         else
-            MoveTowardsPlayer();
+            MoveTowardsPlayer(projectileSkillRange);
     }
 
 
@@ -400,6 +502,7 @@ public class WraithController : MonoBehaviour
         rb.velocity = Vector3.zero;
         ascendTimer = 0;
         rb.useGravity = false;
+
         while (!meteorEnded)
         {
 
@@ -424,8 +527,10 @@ public class WraithController : MonoBehaviour
                 }
                 if (Mathf.Abs(transform.position.y - ascendHeight) <= .5f && !meteorStarted)
                 {
+                    
                     meteorStarted = true;
                     anim.SetTrigger("MeteorStart");
+
                 }
                 ascendTimer += Time.deltaTime;
 
@@ -434,7 +539,7 @@ public class WraithController : MonoBehaviour
         }
 
         print("Ascend ended");
-        
+
     }
 
 
@@ -442,6 +547,22 @@ public class WraithController : MonoBehaviour
     IEnumerator MeteorShower()
     {
         Debug.Log("Meteor Shower Activated!");
+
+        if (thirdMeteor)
+        {
+            meteorAmount = lastMeteorAmount;
+        }
+        else if (secondMeteor)
+        {
+            meteorAmount = secondMeteorAmount;
+
+        }
+        else if (firstMeteor)
+        {
+            meteorAmount = firstMeteorAmount;
+            timeBetweenMeteors = lastTimeBetweenMeteors;
+        }
+
 
         for (int i = 0; i < meteorAmount;)
         {
@@ -460,9 +581,11 @@ public class WraithController : MonoBehaviour
         meteorEnded = true;
         meteorStarted = false;
         anim.SetTrigger("MeteorEnd");
+        isPerformingAction = false;
+        waitTimer = 0;
     }
 
-    public void ResetGravity() => rb.useGravity = true;
+
     private void SpawnMeteor()
     {
         Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * randomOffsetMultiplier;
@@ -493,15 +616,19 @@ public class WraithController : MonoBehaviour
     {
         return new Vector3(0, rb.velocity.y, 0);
     }
-    private void MoveTowardsPlayer()
+    private void MoveTowardsPlayer(float range)
     {
-        throw new NotImplementedException();
+        StartCoroutine(WalkTowardsPlayer(range));
     }
     bool IsPlayerInRange(float range)
     {
         return Vector3.Distance(player.position, transform.position) < range;
 
     }
+
+    public void ResetGravity() => rb.useGravity = true;
+
+    public void ResetWaitTimer() => waitTimer = 0;
 
     void CheckGrounded()
     {

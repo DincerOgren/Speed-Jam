@@ -288,6 +288,7 @@ public class PlayerMovement : MonoBehaviour
     public float acceleration = 20f; 
     public float deceleration = 25f; 
     public float gravity = 9.81f;
+    public float maxGravity = 100f;
     public float jumpHeight = 2f; 
 
     [Header("Pushback/Physics Interaction")]
@@ -393,7 +394,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isGrounded)
         {
-            velocity.y -= gravity * Time.deltaTime; 
+            velocity.y -= gravity * Time.deltaTime;
+            if (velocity.y>=maxGravity)
+            {
+                velocity.y = maxGravity;
+            }
         }
         else if (velocity.y < 0)
         {
