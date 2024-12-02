@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    
     private Rigidbody rb;
     private PlayerMovement movement;
     private Dash dash;

@@ -40,29 +40,35 @@ public class InteractWithObject : MonoBehaviour
         
         sliderObject.SetActive(false);
     }
-    private void Update()
-    {
-        
-        Vector3 diff = interactingObject.transform.position - player.transform.position;
 
-        if(diff.magnitude < 4)
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("Player")) 
         {
             interactable = true;
             sliderObject.SetActive(true);
         }
-        else
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
         {
             interactable = false;
             sliderObject.SetActive(false);
         }
-
+    }
+    private void Update()
+    {
         if (slider.value <= currentValue)
         {
             slider.value += 50 * Time.deltaTime;
         }
 
 
-        if(Input.GetKey(KeyCode.F))
+
+        if (Input.GetKey(KeyCode.F))
         {
             if(interactable && !interacting)
             {

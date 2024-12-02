@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
+    private bool hasStart;
     public TextMeshProUGUI textPro;
 
     float timer;
@@ -13,9 +14,13 @@ public class Timer : MonoBehaviour
     void Update()
     {
 
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && !hasStart)
         {
+            hasStart = true;
+        }
 
+        if(hasStart)
+        {
             timer += Time.deltaTime;
 
             // Calculate minutes, seconds, and milliseconds
@@ -29,6 +34,5 @@ public class Timer : MonoBehaviour
             // Update the TextMeshPro text
             textPro.text = formattedTime;
         }
-
     }
 }

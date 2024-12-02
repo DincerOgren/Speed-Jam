@@ -11,6 +11,7 @@ TagManager:
   - Collide
   - Ground
   - Enemy
+  - PlayerStats
   layers:
   - Default
   - TransparentFX

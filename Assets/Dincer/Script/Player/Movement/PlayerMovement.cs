@@ -395,9 +395,9 @@ public class PlayerMovement : MonoBehaviour
         if (!isGrounded)
         {
             velocity.y -= gravity * Time.deltaTime;
-            if (velocity.y>=maxGravity)
+            if (Mathf.Abs(velocity.y) >=maxGravity)
             {
-                velocity.y = maxGravity;
+                velocity.y = -maxGravity;
             }
         }
         else if (velocity.y < 0)
@@ -481,6 +481,7 @@ public class PlayerMovement : MonoBehaviour
         // Apply gravity to vertical velocity if not grounded
         if (!isGrounded)
         {
+            
             pushVelocity.y -= gravity * Time.deltaTime; // Apply gravity
         }
         else

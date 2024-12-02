@@ -7,9 +7,15 @@ public class OpenLeaderboard : MonoBehaviour
     public GameObject leaderboard;
     public GameObject stats;
 
+    private void Start()
+    {
+        
+        leaderboard.SetActive(false);
+    }
+
     public void Click()
     {
-        stats.SetActive(false);
+        
         leaderboard.SetActive(true);
     }
 }
