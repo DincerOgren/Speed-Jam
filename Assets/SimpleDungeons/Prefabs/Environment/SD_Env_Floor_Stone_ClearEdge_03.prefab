@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3341682}
   - component: {fileID: 2355382}
   - component: {fileID: 1412665279741257536}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SD_Env_Floor_Stone_ClearEdge_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}

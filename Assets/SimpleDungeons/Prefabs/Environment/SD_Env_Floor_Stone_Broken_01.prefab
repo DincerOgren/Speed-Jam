@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3394148}
   - component: {fileID: 2378062}
   - component: {fileID: 4914086594791500396}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SD_Env_Floor_Stone_Broken_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

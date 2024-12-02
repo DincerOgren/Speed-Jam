@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3351462}
   - component: {fileID: 2337762}
   - component: {fileID: -2107973655767679692}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SD_Env_Floor_Stone_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3325440}
   - component: {fileID: 2330452}
   - component: {fileID: -7568253337808478842}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SD_Env_Floor_Wood_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

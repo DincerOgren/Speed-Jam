@@ -13,6 +13,7 @@ public class InteractWithObject : MonoBehaviour
 
     public bool isPressing;
     
+    Animator animator;
 
     public bool done;
 
@@ -27,19 +28,24 @@ public class InteractWithObject : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         slider = GameObject.FindGameObjectWithTag("PressEUi").GetComponent<Slider>();
         sliderObject = GameObject.FindGameObjectWithTag("PressEUi");
+
+        animator = gameObject.GetComponent<Animator>();
+
+        interactingObject = transform.gameObject;
     }
 
     private void Start()
     {
-        interactingObject = gameObject;
+        
         
         sliderObject.SetActive(false);
     }
     private void Update()
     {
-        Vector3 diff = interactingObject.transform.position - player.transform.position;
         
-        if(diff.magnitude < 10)
+        Vector3 diff = interactingObject.transform.position - player.transform.position;
+
+        if(diff.magnitude < 4)
         {
             interactable = true;
             sliderObject.SetActive(true);
@@ -89,9 +95,14 @@ public class InteractWithObject : MonoBehaviour
                 yield return new WaitForSecondsRealtime(0.5f);
                 sliderObject.SetActive(false);
                 slider.value = 0;
-                Destroy(gameObject);
-                
+                transform.GetComponent<InteractWithObject>().enabled = false;
+
+
+                animator.SetTrigger("OpenDoor");
                 StopAllCoroutines();
+                
+                
+                
                 
                 
             }
@@ -107,4 +118,6 @@ public class InteractWithObject : MonoBehaviour
         StopAllCoroutines();
 
     }
+
+
 }
