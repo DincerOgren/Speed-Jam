@@ -24,14 +24,14 @@ public class ChargeAttack : MonoBehaviour
     // DMG layer etc.
     float chargeTimer = 0;
 
-    float minHoldTime = .3f;
+    public float minHoldTime = .3f;
 
     float firstChargeTime = 2f;
     bool isStartedChargingAttack;
     bool firstCharge;
     bool chargeHold;
     float holdTimer = 0;
-    float maxChargeTime = 3f;
+    public float maxChargeTime = 3f;
 
     [Header("Force")]
     public float forceDuration = 2f;
@@ -74,14 +74,16 @@ public class ChargeAttack : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Mouse1))
         {
 
-            chargeTimer = 0;
-            holdTimer = 0;
 
             if (!isStartedChargingAttack)
             {
                 return;
             }
             ReleaseBlast();
+
+
+            chargeTimer = 0;
+            holdTimer = 0;
         }
 
         CheckForceTimer();
@@ -102,7 +104,7 @@ public class ChargeAttack : MonoBehaviour
         if (forceTimer >= forceDuration)
         {
             forceStarted = false;
-            pmRef.SetPushbackActive(forceStarted);
+            //pmRef.SetPushbackActive(forceStarted);
             forceTimer = 0;
             return;
         }
@@ -206,7 +208,7 @@ public class ChargeAttack : MonoBehaviour
        
 
         forceStarted = true;
-        pmRef.SetPushbackActive(forceStarted);
+       // pmRef.SetPushbackActive(forceStarted);
         if (rb == null)
         {
             Debug.LogWarning("No Rigidbody assigned for reverse force!");
@@ -216,9 +218,10 @@ public class ChargeAttack : MonoBehaviour
 
         reverseDir = -lookDir.forward;
 
-        float forceStrength = reverseForce * chargeDuration;
-
-        rb.AddForce(reverseDir * forceStrength, ForceMode.Impulse);
+        float forceStrength = reverseForce * chargeTimer;
+        print("force)+=" + chargeDuration +" ,, "+chargeTimer);
+        pmRef.ApplyPushback(reverseDir * forceStrength);
+       // rb.AddForce(reverseDir * forceStrength, ForceMode.Impulse);
 
         
 

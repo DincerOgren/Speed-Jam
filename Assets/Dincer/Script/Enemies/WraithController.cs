@@ -67,11 +67,10 @@ public class WraithController : MonoBehaviour
 
     [Header("Laser Beam")]
     public bool useLaser;
-    public GameObject drawParticle;
+
     public ParticleSystem laserParticle;
 
-    public float energyDrawDuratiion;
-    float drawTimer;
+
 
     public float laserDuration;
     float laserTimer;
@@ -79,7 +78,6 @@ public class WraithController : MonoBehaviour
     public float laserWarningDuration;
     float laserWarningTimer;
     public float laserDamage;
-    public float laserCollider;
     public float laserRange;
 
     public float laserTurnSpeed;
@@ -103,7 +101,7 @@ public class WraithController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-       // player = GameObject.FindWithTag("Player").transform;
+        // player = GameObject.FindWithTag("Player").transform;
     }
 
     private void Start()
@@ -117,7 +115,7 @@ public class WraithController : MonoBehaviour
 
         UpdateAnimator();
         CheckGrounded();
-        if (startedWalking )
+        if (startedWalking)
         {
             transform.LookAt(player);
 
@@ -174,21 +172,6 @@ public class WraithController : MonoBehaviour
         else
             MoveTowardsPlayer();
 
-        
-    }
-
-    IEnumerator EnergyyDraw()
-    {
-        drawTimer = 0;
-        while (drawTimer < energyDrawDuratiion)
-        {
-            transform.LookAt(player);
-
-            drawTimer+= Time.deltaTime;
-            yield return null;
-        }
-
-        FireLaser();
 
     }
 
@@ -222,11 +205,11 @@ public class WraithController : MonoBehaviour
 
 
 
-    
 
-    
-        
-    
+
+
+
+
 
     void StartLaserBeam()
     {
@@ -239,7 +222,7 @@ public class WraithController : MonoBehaviour
         EnableLaserBeam(Color.red, 0.01f); // Thin red line as a warning
         laserWarningTimer = 0;
         transform.LookAt(player);
-        while (laserWarningTimer<laserWarningDuration)
+        while (laserWarningTimer < laserWarningDuration)
         {
             RotateTowardsPlayer(laserTurnSpeed * 2);
             UpdateLaserPos();
@@ -288,7 +271,7 @@ public class WraithController : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.forward, out hit, laserRange, hitLayers))
         {
             // Adjust the laser's endpoint to the collision point
-           // laserBeam.SetPosition(1, hit.point);
+            // laserBeam.SetPosition(1, hit.point);
 
             // Handle collision (e.g., damage player)
             if (hit.collider.CompareTag("Player"))
@@ -301,9 +284,9 @@ public class WraithController : MonoBehaviour
 
     private void UpdateLaserPos()
     {
-        laserBeam.SetPosition(0, transform.position+Vector3.up*playerHeightCorrection); // Start at the boss's position
+        laserBeam.SetPosition(0, transform.position + Vector3.up * playerHeightCorrection); // Start at the boss's position
         Vector3 targetDirection = transform.forward * laserRange;
-        laserBeam.SetPosition(1, transform.position+playerHeightCorrection*Vector3.up + targetDirection);
+        laserBeam.SetPosition(1, transform.position + playerHeightCorrection * Vector3.up + targetDirection);
     }
 
 
@@ -380,9 +363,9 @@ public class WraithController : MonoBehaviour
     void SpawnProjectile()
     {
         var a = Instantiate(projPrefab, projectileExitPoint.position, Quaternion.identity);
-        
+
         Vector3 dir = (player.position - transform.position).normalized;
-        
+
 
         a.GetComponent<Rigidbody>().velocity = dir * projSpeed;
         //a.lifetime = lifetime;
@@ -416,6 +399,7 @@ public class WraithController : MonoBehaviour
     {
         rb.velocity = Vector3.zero;
         ascendTimer = 0;
+        rb.useGravity = false;
         while (!meteorEnded)
         {
 
@@ -428,11 +412,16 @@ public class WraithController : MonoBehaviour
                 float height = hitInfo.point.y + ascendHeight;
 
 
+
                 float dist = (height - transform.position.y);
                 float amountToLift;
                 amountToLift = dist * ascendForce - GetPlayerVerticalVelocity().y;
                 Vector3 liftForce = new(0, amountToLift, 0);
-                rb.AddForce(liftForce, ForceMode.VelocityChange);
+                if (!meteorStarted)
+                {
+                    rb.AddForce(liftForce, ForceMode.VelocityChange);
+
+                }
                 if (Mathf.Abs(transform.position.y - ascendHeight) <= .5f && !meteorStarted)
                 {
                     meteorStarted = true;
@@ -445,6 +434,7 @@ public class WraithController : MonoBehaviour
         }
 
         print("Ascend ended");
+        
     }
 
 
@@ -472,6 +462,7 @@ public class WraithController : MonoBehaviour
         anim.SetTrigger("MeteorEnd");
     }
 
+    public void ResetGravity() => rb.useGravity = true;
     private void SpawnMeteor()
     {
         Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * randomOffsetMultiplier;

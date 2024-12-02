@@ -11,7 +11,7 @@ public class LightAttack : MonoBehaviour
     [Header("Projectile Settings")]
     [SerializeField] Transform projectileExitPoint;
     [SerializeField]
-    float projectileSpeed, projectileLifetime;
+    float projectileSpeed, projectileLifetime,projectileDamage;
     [SerializeField]
     GameObject projectilePrefab;
 
@@ -43,7 +43,7 @@ public class LightAttack : MonoBehaviour
         Vector3 dir = shootDir;
 
         proj.GetComponent<Rigidbody>().velocity = projectileSpeed * dir;
-        
-        
+
+        proj.GetComponent<Projectile>().SetProjectile(projectileLifetime,projectileDamage);
     }
 }

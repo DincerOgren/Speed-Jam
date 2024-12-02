@@ -10,6 +10,7 @@ TagManager:
   - PressEUi
   - Collide
   - Ground
+  - Enemy
   layers:
   - Default
   - TransparentFX

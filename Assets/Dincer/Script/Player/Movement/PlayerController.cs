@@ -15,15 +15,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        movement.HandleMovementInput();
+        //movement.HandleMovementInput();
         if (Input.GetKeyDown(dashKey))
         {
-            dash.PerformDash();
+           // dash.PerformDash();
         }
     }
 
     void FixedUpdate()
     {
-        movement.ApplyMovement();
+        //movement.ApplyMovement();
     }
 }

@@ -859,11 +859,6 @@ Transform:
   m_Father: {fileID: 1910926950}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &438223797 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6669451855901646783, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
-  m_PrefabInstance: {fileID: 6669451855995407205}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &454647400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1017,37 +1012,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: deeb8cafca0af284e92a057261d17723, type: 3}
---- !u!1 &513189655
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 513189656}
-  m_Layer: 7
-  m_Name: LookTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &513189656
+--- !u!4 &513189656 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 513189656, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
+  m_PrefabInstance: {fileID: 6669451855995407205}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513189655}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.97, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 438223797}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &564826752
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1484,7 +1453,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8002945523966090987}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1541,13 +1510,10 @@ MonoBehaviour:
   enemySpawnAmount: 0
   enemyTypes: []
   useLaser: 0
-  drawParticle: {fileID: 0}
   laserParticle: {fileID: 1774367786083118607}
-  energyDrawDuratiion: 0
   laserDuration: 3
   laserWarningDuration: 1
   laserDamage: 0
-  laserCollider: 0
   laserRange: 35
   laserTurnSpeed: 1
   laserBeam: {fileID: 1473143435}
@@ -68548,24 +68514,8 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6669451854807723166, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.333
-      objectReference: {fileID: 0}
-    - target: {fileID: 6669451855852424953, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.786
-      objectReference: {fileID: 0}
     - target: {fileID: 6669451855901646768, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6669451855901646768, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6669451855901646768, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6669451855901646783, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
@@ -68578,7 +68528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6669451855901646783, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.346
       objectReference: {fileID: 0}
     - target: {fileID: 6669451855901646783, guid: ca4a91166610dac44ad4cb7993d13c81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -75068,13 +75018,32 @@ GameObject:
   - component: {fileID: 760819596}
   - component: {fileID: 760819595}
   - component: {fileID: 760819597}
+  - component: {fileID: 8002945523966090988}
   m_Layer: 0
   m_Name: Wraith
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8002945523966090988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8002945523966090987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231260e794860364babed843169d121d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBoss: 1
+  isPlayer: 0
+  isWendigo: 0
+  isMothman: 0
+  isExploder: 0
+  maxHealth: 20
 --- !u!1 &8002945523966090989
 GameObject:
   m_ObjectHideFlags: 0
