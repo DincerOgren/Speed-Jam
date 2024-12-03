@@ -143,6 +143,8 @@ public class FireSpirit : MonoBehaviour
 
         // Rigidbody'ye doðru bir hýz uygula
         rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+
+        player.transform.GetComponent<Health>().TakeDamage(100);
     }
 
 

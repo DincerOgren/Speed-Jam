@@ -119,7 +119,7 @@ public class WraithController : MonoBehaviour
         health=GetComponent<Health>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        // player = GameObject.FindWithTag("Player").transform;
+        player = GameObject.FindWithTag("Player").transform;
     }
 
     private void Start()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour
 {
@@ -10,8 +11,9 @@ public class Health : MonoBehaviour
     public bool isMothman;
     public bool isExploder;
 
+    public float currentHealth;
     [SerializeField] float maxHealth;
-    float currentHealth;
+    
 
     [SerializeField] GameObject deadCanvas;
 
@@ -59,8 +61,7 @@ public class Health : MonoBehaviour
         //Dead anim
         if (isPlayer)
         {
-            deadCanvas.SetActive(true);
-
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
         }
         gameObject.SetActive(false);
     }
